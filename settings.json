@@ -1,0 +1,260 @@
+{
+  //  === === === ===
+  //  === Update ===
+  "update.mode": "manual",
+  "update.showReleaseNotes": false,
+  "update.enableWindowsBackgroundUpdates": false,
+  //  === === === === ===
+  //  === EXTENSIONS ===
+  "extensions.autoUpdate": false,
+  "extensions.verifySignature": false,
+  "extensions.autoCheckUpdates": false,
+  "extensions.ignoreRecommendations": true,
+  //  === === === === ===
+  //  === TELEMETRY ===
+  "telemetry.feedback.enabled": false,
+  //  === === === === ===
+  //  ===  SECURITY  ===
+  "security.restrictUNCAccess": false,
+  "security.workspace.trust.enabled": false,
+  "security.workspace.trust.banner": "never",
+  "security.workspace.trust.emptyWindow": true,
+  "security.workspace.trust.untrustedFiles": "open",
+  "security.workspace.trust.startupPrompt": "never",
+  "security.promptForLocalFileProtocolHandling": false,
+  "security.promptForRemoteFileProtocolHandling": false,
+  //  === === === === === ===
+  //  ===  Theme & Icon  ===
+  "workbench.iconTheme": "symbols",
+  "workbench.colorTheme": "o99",
+  "workbench.productIconTheme": "fluent-icons",
+  "workbench.preferredDarkColorTheme": "o9",
+  //  === === === ===
+  //  ===  Font  ===
+  "editor.fontSize": 16,
+  "editor.lineHeight": 1.8,
+  "debug.console.fontSize": 14,
+  "debug.console.lineHeight": 35,
+  "editor.fontLigatures": "'ss01', 'cv03', 'zero'",
+  "editor.fontFamily": "'JetBrains Mono', Consolas, 'Courier New', monospace",
+  //  === === === === ===
+  //  ===  Highlight  ===
+  "editor.renderLineHighlight": "gutter",
+  "workbench.editor.highlightModifiedTabs": true,
+  //  === === === === ===
+  //  ===  Interface  ===
+  "window.zoomLevel": 0,
+  "editor.lineNumbers": "on",
+  "notebook.lineNumbers": "off",
+  "window.commandCenter": false,
+  "window.dialogStyle": "custom",
+  "debug.toolBarLocation": "docked",
+  "window.autoDetectHighContrast": false,
+  "window.newWindowDimensions": "inherit",
+  "window.title": "${activeEditorLong}",
+  "merge-conflict.diffViewPosition": "Below",
+  "workbench.localHistory.maxFileEntries": 1000,
+  "merge-conflict.autoNavigateNextConflict.enabled": true,
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  //  === === === === === ===
+  //  === Go to Location ===
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.gotoLocation.multipleDeclarations": "goto",
+  "editor.gotoLocation.multipleImplementations": "goto",
+  "editor.gotoLocation.multipleReferences": "gotoAndPeek",
+  "editor.gotoLocation.multipleTypeDefinitions": "gotoAndPeek",
+  //  === === === === ===
+  //  ===  Word Wrap  ===
+  "editor.wordWrap": "on",
+  "outline.collapseItems": "alwaysExpand",
+  //  === === === === ===
+  //  ===  Mini Map  ===
+  "editor.minimap.enabled": true,
+  "editor.minimap.maxColumn": 60,
+  "editor.minimap.autohide": true,
+  "editor.minimap.renderCharacters": false,
+  //  === === === === ===
+  //  === Scroll Bar ===
+  "editor.scrollBeyondLastLine": false,
+  "editor.stickyScroll.enabled": false,
+  "editor.scrollbar.vertical": "hidden",
+  "workbench.list.horizontalScrolling": false,
+  "workbench.editor.scrollToSwitchTabs": true,
+  "editor.scrollbar.verticalScrollbarSize": 8,
+  "editor.scrollbar.horizontalScrollbarSize": 8,
+  //  === === === === === === ===
+  //  ===  Smooth Scrolling  ===
+  "editor.smoothScrolling": true,
+  "workbench.list.smoothScrolling": true,
+  "terminal.integrated.smoothScrolling": true,
+  //  === === === ===
+  //  === Cursor ===
+  "editor.cursorWidth": 5,
+  "editor.cursorBlinking": "solid",
+  "editor.multiCursorLimit": 50000,
+  "editor.hideCursorInOverviewRuler": true,
+  "editor.cursorSmoothCaretAnimation": "on",
+  //  === === === === ===
+  //  ===  TERMINAL  ===
+  "terminal.integrated.mouseWheelZoom": true,
+  "terminal.integrated.cursorBlinking": false,
+  "terminal.integrated.showExitAlert": false,
+  "terminal.integrated.copyOnSelection": true,
+  "terminal.integrated.gpuAcceleration": "on",
+  "terminal.integrated.hideOnStartup": "always",
+  "terminal.integrated.stickyScroll.enabled": false,
+  "terminal.integrated.fontLigatures.enabled": true,
+  "terminal.integrated.enableMultiLinePasteWarning": "never",
+  "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font', 'JetBrains Mono'",
+  //  === === === === ===
+  //  ===  WORKBENCH  ===
+  "workbench.tips.enabled": false,
+  "workbench.editor.wrapTabs": true,
+  "workbench.panel.showLabels": false,
+  "workbench.enableExperiments": true,
+  "workbench.editor.revealIfOpen": true,
+  "workbench.editor.tabSizing": "shrink",
+  "workbench.editor.showTabs": "multiple",
+  "workbench.editor.labelFormat": "short",
+  "workbench.editor.closeOnFileDelete": true,
+  "workbench.tree.renderIndentGuides": "none",
+  "window.density.editorTabHeight": "compact",
+  "workbench.startupEditor": "newUntitledFile",
+  "workbench.editor.pinnedTabSizing": "compact",
+  "workbench.editor.tabSizingFixedMinWidth": 38,
+  "workbench.editor.tabSizingFixedMaxWidth": 38,
+  //  === === === ===
+  //  === SEARCH ===
+  "search.smartCase": true,
+  "search.seedWithNearestWord": true,
+  "search.useGlobalIgnoreFiles": false,
+  //  === === === ===
+  //  ===  FILES  ===
+  "files.eol": "\n",
+  "files.autoSave": "off",
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "files.defaultLanguage": "plaintext",
+  //  === === === ===
+  //  === EDITOR ===
+  "editor.tabSize": 2,
+  "editor.folding": false,
+  "editor.dragAndDrop": false,
+  "editor.glyphMargin": false,
+  "editor.tabCompletion": "on",
+  "editor.hover.sticky": false,
+  "editor.linkedEditing": true,
+  "editor.mouseWheelZoom": true,
+  "editor.hover.enabled": false,
+  "editor.renderWhitespace": "none",
+  //  === === === === ===
+  //  ===  EXPLORER  ===
+  "explorer.compactFolders": false,
+  "explorer.openEditors.visible": 1,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  //  === === === === ===
+  //  ===  Confirm  ===
+  "git.confirmSync": false,
+  "git.confirmForcePush": false,
+  "debug.confirmOnExit": "never",
+  "explorer.confirmDelete": false,
+  "git.confirmEmptyCommits": false,
+  "git.confirmNoVerifyCommit": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmPasteNative": false,
+  "window.confirmBeforeClose": "never",
+  "window.confirmSaveUntitledWorkspace": false,
+  "terminal.integrated.confirmOnKill": "never",
+  //  === === === ===
+  //  ===   GIT   ===
+  "git.autofetch": "all",
+  "git.autofetchPeriod": 0,
+  "git.showProgress": false,
+  "git.rebaseWhenSync": true,
+  "git.allowForcePush": true,
+  "git.countBadge": "tracked",
+  "git.ignoreSubmodules": true,
+  "git.terminalGitEditor": true,
+  "git.enableSmartCommit": true,
+  "git.followTagsWhenSync": true,
+  "git.ignoreLimitWarning": true,
+  "git.openAfterClone": "always",
+  "git.allowNoVerifyCommit": true,
+  "git.ignoreLegacyWarning": true,
+  "git.ignoreRebaseWarning": true,
+  "git.postCommitCommand": "sync",
+  "git.replaceTagsWhenPull": true,
+  "git.timeline.date": "authored",
+  "git.showReferenceDetails": false,
+  "git.ignoreMissingGitWarning": true,
+  "git.timeline.showUncommitted": true,
+  "git.showInlineOpenFileAction": false,
+  "git.ignoreWindowsGit27Warning": true,
+  "git.useCommitInputAsStashMessage": true,
+  "git.blame.editorDecoration.enabled": true,
+  "git.promptToSaveFilesBeforeStash": "never",
+  "git.promptToSaveFilesBeforeCommit": "never",
+  "git.openRepositoryInParentFolders": "always",
+  "git.blame.statusBarItem.template": "${authorName}",
+  "git.blame.editorDecoration.template": "${authorName}",
+  //  - Default clone directory
+  "git.defaultCloneDirectory": "~/Projects",
+  //"explorer.excludeGitIgnore": false,
+  //  - Default and User Settings
+  //"workbench.settings.openDefaultSettings": true,
+  //  - Settings .json
+  //"workbench.settings.editor": "json",
+  //  === === === === === === === === === ===
+  //  === FORMATTING & LANGUAGE SPECIFIC ===
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnType": false,
+  //  === === === === === ===
+  //  === OTHER SETTINGS ===
+  "editor.guides.indentation": false,
+  "editor.accessibilitySupport": "off",
+  "editor.guides.bracketPairs": "active",
+  "diffEditor.hideUnchangedRegions.enabled": true,
+  "symbols.hidesExplorerArrows": false,
+  "workbench.editor.tabActionLocation": "left",
+  "workbench.sideBar.location": "right",
+  "workbench.preferredLightColorTheme": "o9",
+  "workbench.preferredHighContrastColorTheme": "o9",
+  "workbench.preferredHighContrastLightColorTheme": "o9",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "editor.parameterHints.enabled": false,
+  "editor.overviewRulerBorder": false,
+  "editor.renderControlCharacters": false,
+  "workbench.editor.empty.hint": "hidden",
+  "diffEditor.renderSideBySide": false,
+  "editor.multiCursorModifier": "ctrlCmd",
+  "files.enableTrash": false,
+  "outline.problems.colors": false,
+  "zenMode.fullScreen": false,
+  "zenMode.centerLayout": false,
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.fontSize": 14,
+  "diffEditor.wordWrap": "on",
+  "outline.problems.enabled": false,
+  "problems.autoReveal": false,
+  "problems.decorations.enabled": false,
+  "problems.defaultViewMode": "table",
+  "problems.sortOrder": "position",
+  "editor.unusualLineTerminators": "off",
+  "outline.problems.badges": false,
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "editor.inlineSuggest.edits.allowCodeShifting": "never",
+  "editor.inlineSuggest.edits.renderSideBySide": "never",
+  "editor.inlineSuggest.enabled": false,
+  "editor.inlineSuggest.showToolbar": "never",
+  "editor.quickSuggestions": {
+    "other": "off"
+  },
+  "editor.inlineSuggest.syntaxHighlightingEnabled": false,
+  "editor.screenReaderAnnounceInlineSuggestion": false,
+  "editor.snippetSuggestions": "none",
+  "editor.suggest.filterGraceful": false,
+  "editor.suggest.insertMode": "replace",
+  "editor.suggestOnTriggerCharacters": false,
+}
