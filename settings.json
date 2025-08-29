@@ -256,5 +256,5 @@
   "editor.snippetSuggestions": "none",
   "editor.suggest.filterGraceful": false,
   "editor.suggest.insertMode": "replace",
-  "editor.suggestOnTriggerCharacters": false,
+  "editor.suggestOnTriggerCharacters": false
 }
