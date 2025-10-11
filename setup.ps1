@@ -52,9 +52,15 @@ function Install-Cursor {
         throw
     }
 
-    # Update PATH to ensure code command is available
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + 
-                [System.Environment]::GetEnvironmentVariable("Path", "User")
+    # Update PATH to ensure cursor command is available
+    $cursorPath = "C:\Program Files\cursor"
+    if (Test-Path -Path $cursorPath) {
+        $env:Path = "$cursorPath;" + [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + 
+                    [System.Environment]::GetEnvironmentVariable("Path", "User")
+        Write-Verbose "Added Cursor to PATH: $cursorPath"
+    } else {
+        Write-Warning "Cursor installation directory not found at: $cursorPath"
+    }
 
     Write-Host "Installing extensions..." -ForegroundColor Cyan
     
@@ -64,9 +70,30 @@ function Install-Cursor {
         
         $extensions = (Get-Content $extensionsJson -ErrorAction Stop | ConvertFrom-Json).extensions
         
+        # Verify cursor command is available
+        $cursorCommand = Get-Command -Name "cursor" -ErrorAction SilentlyContinue
+        if ($null -eq $cursorCommand) {
+            Write-Warning "Cursor command not found in PATH. Attempting to find Cursor executable..."
+            $cursorExe = "C:\Program Files\cursor\Cursor.exe"
+            if (Test-Path -Path $cursorExe) {
+                $cursorCommand = $cursorExe
+                Write-Host "  Found Cursor at: $cursorExe" -ForegroundColor Green
+            } else {
+                throw "Cursor executable not found. Please ensure Cursor is installed correctly."
+            }
+        } else {
+            $cursorCommand = $cursorCommand.Source
+            Write-Host "  Using Cursor from: $cursorCommand" -ForegroundColor Green
+        }
+        
         foreach ($extension in $extensions) {
             Write-Host "  Installing: $extension" -ForegroundColor DarkCyan
-            code --install-extension $extension
+            if ($cursorCommand -eq "cursor") {
+                cursor --install-extension $extension
+            } else {
+                & "$cursorCommand" --install-extension $extension
+            }
+            
             if ($?) {
                 Write-Host "  ✓ $extension" -ForegroundColor Green
             }
