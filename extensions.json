@@ -3,10 +3,7 @@
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "ms-vscode.powershell",
-    "jock.svg",
     "castrogusttavo.symbols",
-    "miguelsolorio.fluent-icons",
-    "foxundermoon.shell-format",
-    "bradlc.vscode-tailwindcss"
+    "miguelsolorio.fluent-icons"
   ]
 }
