@@ -1,14 +1,14 @@
 <h1 align="center">Cursor Setup</h1>
 <div align="center">
     <a href="https://github.com/o9-9/cursor-setup/">
-        <img width="120" alt="cursor-setup" src="https://github.com/user-attachments/assets/c5c3bb94-690b-437a-8b89-ce16c702a00a" />
+        <img width="128" alt="cursor-setup" src="https://github.com/user-attachments/assets/ae6defc2-864e-4a91-beed-fde2764df04b" />
     </a>
 </div>
 
 ###
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/e354da90-1e17-4276-b887-163a84e58a79" width="800" />
+  <img src="https://github.com/user-attachments/assets/4bc7ee5b-17b8-459d-8f79-d4fe839d86f7" width="800" />
 </div>
 
 ###
