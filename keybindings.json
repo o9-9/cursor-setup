@@ -1,0 +1,17 @@
+// Place your key bindings in this file to override the defaults
+[
+  {
+    "key": "ctrl+i",
+    "command": "composerMode.agent"
+  },
+  {
+    // disable cursor tab > shift+D
+    "key": "shift+d",
+    "command": "editor.cpp.disableenabled"
+  },
+  {
+    // enable cursor tab  > shift+E
+    "key": "shift+e",
+    "command": "editor.action.enableCppGlobally"
+  }
+]
