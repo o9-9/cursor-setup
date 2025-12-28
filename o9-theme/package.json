@@ -1,0 +1,99 @@
+{
+  "name": "o9",
+  "displayName": "o9 Theme",
+  "description": "o9 Theme.",
+  "publisher": "o9",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/o9-9/o9-theme"
+  },
+  "keywords": [
+    "theme",
+    "color-theme",
+    "vscode",
+    "vscode-theme",
+    "o9",
+    "o9-theme",
+    "o9-color",
+    "o9-dusk",
+    "o9-midnight",
+    "o9-9"
+  ],
+  "icon": "icon.png",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "o9",
+        "uiTheme": "vs-dark",
+        "path": "./themes/o9.json"
+      },
+      {
+        "label": "o9 1",
+        "uiTheme": "vs-dark",
+        "path": "./themes/o9-1.json"
+      },
+      {
+        "label": "o9 2",
+        "uiTheme": "vs-dark",
+        "path": "./themes/o9-2.json"
+      },
+      {
+        "label": "o9 Min",
+        "uiTheme": "vs-dark",
+        "path": "./themes/o9-3_min.json"
+      },
+      {
+        "label": "o9 Dusk",
+        "uiTheme": "vs-dark",
+        "path": "./themes/o9-4_dusk.json"
+      },
+      {
+        "label": "o9 Midnight",
+        "uiTheme": "vs-dark",
+        "path": "./themes/o9-5_midnight.json"
+      },
+      {
+        "label": "o9 Cursor Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/o9-cursor_dark.json"
+      },
+      {
+        "label": "o9 Cursor Midnight",
+        "uiTheme": "vs-dark",
+        "path": "./themes/o9-cursor_midnight.json"
+      },
+      {
+        "label": "o9 Cursor Light",
+        "uiTheme": "vs",
+        "path": "./themes/o9-cursor_light.json"
+      },
+      {
+        "label": "o9 VS Code Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/o9-vscode-dark.json"
+      },
+      {
+        "label": "o9 VS Code Dark Plus",
+        "uiTheme": "vs-dark",
+        "path": "./themes/o9-vscode-dark_plus.json"
+      },
+      {
+        "label": "o9 VS Code Light",
+        "uiTheme": "vs",
+        "path": "./themes/o9-vscode-light.json"
+      },
+      {
+        "label": "o9 VS Code Light Plus",
+        "uiTheme": "vs",
+        "path": "./themes/o9-vscode-light_plus.json"
+      }
+    ]
+  }
+}

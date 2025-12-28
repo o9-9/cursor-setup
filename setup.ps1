@@ -1,13 +1,13 @@
-# set color theme
-$Theme = @{
-    Primary   = 'Cyan'
-    Success   = 'Green'
-    Warning   = 'Yellow'
-    Error     = 'Red'
-    Info      = 'White'
+# Configuration
+$Script:Config = @{
+    RepoUrl        = "https://raw.githubusercontent.com/o9-9/cursor-setup/main"
+    CursorUserPath = "$env:APPDATA\Cursor\User"
+    CursorExePath  = "$env:ProgramFiles\Cursor\Cursor.exe"
+    ScriptRoot     = $PSScriptRoot
 }
 
-# ASCII Logo
+$Theme = @{ Primary = 'Cyan'; Success = 'Green'; Warning = 'Yellow'; Error = 'Red' }
+
 $Logo = @"
                     ███████████   
                     ██╔══════██╗  
@@ -19,209 +19,146 @@ $Logo = @"
   ██║      ██║       ██      ██║  
   ███████████║       ██████████║  
    ╚═════════╝       ╚═════════╝  
-                                 
 "@
 
-# Border
-$border = "$($PSStyle.Foreground.DarkGray)══════════════════════════════════════$($PSStyle.Reset)"
-
-# Beautiful Output Function
-function Write-Styled {
-    param (
-        [string]$Message,
-        [string]$Color = $Theme.Info,
-        [string]$Prefix = "",
-        [switch]$NoNewline
-    )
-    $symbol = switch ($Color) {
-        $Theme.Success { "[OK]" }
-        $Theme.Error   { "[X]" }
-        $Theme.Warning { "[!]" }
-        default        { "[*]" }
-    }
-    
-    $output = if ($Prefix) { "$symbol $Prefix :: $Message" } else { "$symbol $Message" }
-    if ($NoNewline) {
-        Write-Host $output -ForegroundColor $Color -NoNewline
-    } else {
-        Write-Host $output -ForegroundColor $Color
-    }
+function Write-Log($Msg, $Color = 'White', $Prefix = '') {
+    $symbols = @{ $Theme.Success = '[OK]'; $Theme.Error = '[X]'; $Theme.Warning = '[!]' }
+    $symbol = if ($symbols[$Color]) { $symbols[$Color] } else { '[*]' }
+    $text = if ($Prefix) { "$symbol $Prefix :: $Msg" } else { "$symbol $Msg" }
+    Write-Host $text -ForegroundColor $Color
 }
 
-# Check if running with administrator privileges
-if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Write-Styled "Cursor Setup needs to be run as Administrator. Attempting to relaunch." -Color $Theme.Warning -Prefix "Admin"
-    $argList = @()
-
-    $PSBoundParameters.GetEnumerator() | ForEach-Object {
-        $argList += if ($_.Value -is [switch] -and $_.Value) {
-            "-$($_.Key)"
-        } elseif ($_.Value -is [array]) {
-            "-$($_.Key) $($_.Value -join ',')"
-        } elseif ($_.Value) {
-            "-$($_.Key) '$($_.Value)'"
-        }
-    }
-
-    $script = if ($PSCommandPath) {
-        "& { & `'$($PSCommandPath)`' $($argList -join ' ') }"
-    } else {
-        "&([ScriptBlock]::Create((irm https://github.com/o9-9/cursor-setup/releases/latest/download/setup.ps1))) $($argList -join ' ')"
-    }
-
-    $powershellCmd = if (Get-Command pwsh -ErrorAction SilentlyContinue) { "pwsh" } else { "powershell" }
-    $processCmd = if (Get-Command wt.exe -ErrorAction SilentlyContinue) { "wt.exe" } else { "$powershellCmd" }
-
-    if ($processCmd -eq "wt.exe") {
-        Start-Process $processCmd -ArgumentList "$powershellCmd -ExecutionPolicy Bypass -NoProfile -Command `"$script`"" -Verb RunAs
-    } else {
-        Start-Process $processCmd -ArgumentList "-ExecutionPolicy Bypass -NoProfile -Command `"$script`"" -Verb RunAs
-    }
-
-    break
+function Get-Content-Smart($Path) {
+    if (Test-Path $Path) { return Get-Content $Path -Raw }
+    try { return (Invoke-WebRequest -Uri "$($Config.RepoUrl)/$Path" -UseBasicParsing).Content }
+    catch { Write-Log "Failed to get $Path" -Color $Theme.Error; throw }
 }
 
-# Show Logo
+# Check admin privileges
+$isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if (!$isAdmin) {
+    Write-Log "Relaunching as Administrator..." -Color $Theme.Warning -Prefix "Admin"
+    $script = if ($PSCommandPath) { "& '$PSCommandPath'" } else { "iex (irm $($Config.RepoUrl)/setup.ps1)" }
+    $shell = if (Get-Command pwsh -EA SilentlyContinue) { "pwsh" } else { "powershell" }
+    Start-Process $shell -ArgumentList "-ExecutionPolicy Bypass -NoProfile -Command `"$script`"" -Verb RunAs
+    exit
+}
+
+# Display header
 Write-Host $Logo -ForegroundColor $Theme.Primary
-$border
-Write-Styled "Cursor Setup Assistant" -Color $Theme.Primary -Prefix "Setup"
+Write-Host "$($PSStyle.Foreground.DarkGray)══════════════════════════════════════$($PSStyle.Reset)"
+Write-Log "Cursor Setup Assistant" -Color $Theme.Primary -Prefix "Setup"
 
+# Step 1: Install Cursor
+Write-Log "Installing Cursor..." -Color $Theme.Primary -Prefix "Step 1/7"
+winget install --id Anysphere.Cursor --scope machine --accept-package-agreements --accept-source-agreements | Out-Null
+Write-Log "Cursor installed" -Color $Theme.Success
 
-# Installs the latest Cursor
-Write-Styled "Installing Cursor..." -Color $Theme.Primary -Prefix "Step 1/6"
-winget install --id Anysphere.Cursor --scope machine --accept-package-agreements --accept-source-agreements
-Write-Styled "Cursor Installed" -Color $Theme.Success -Prefix "Success"
+# Step 2: Configure settings
+Write-Host "$($PSStyle.Foreground.DarkGray)══════════════════════════════════════$($PSStyle.Reset)"
+Write-Log "Configuring settings..." -Color $Theme.Primary -Prefix "Step 2/7"
+if (!(Test-Path $Config.CursorUserPath)) { New-Item -ItemType Directory -Path $Config.CursorUserPath -Force | Out-Null }
 
-# Define GitHub repository and Cursor paths
-$repoUrl = "https://raw.githubusercontent.com/o9-9/cursor-setup/main"
-$CursorUserPath = "$env:APPDATA\Cursor\User"
-$border
-Write-Styled "Configuring Cursor Settings..." -Color $Theme.Primary -Prefix "Step 2/6"
-# Ensure the Cursor settings directory exists
-if (!(Test-Path $CursorUserPath)) {
-    New-Item -ItemType Directory -Path $CursorUserPath -Force
-    Write-Styled "Created Cursor settings directory" -Color $Theme.Success
+@('settings.json', 'keybindings.json') | ForEach-Object {
+    $content = Get-Content-Smart $_
+    Set-Content -Path "$($Config.CursorUserPath)\$_" -Value $content
+    Write-Log "Copied $_" -Color $Theme.Success
 }
 
-# Download and copy settings.json
-Invoke-WebRequest -Uri "$repoUrl/settings.json" -OutFile "$CursorUserPath\settings.json"
-Write-Styled "Copied settings.json to Cursor" -Color $Theme.Success
-
-# Download and copy keybindings.json
-Invoke-WebRequest -Uri "$repoUrl/keybindings.json" -OutFile "$CursorUserPath\keybindings.json"
-Write-Styled "Copied keybindings.json to Cursor" -Color $Theme.Success
-
-# Refresh environment variables
+# Refresh PATH
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-Write-Styled "Environment variables refreshed" -Color $Theme.Success
-$border
 
-
-# Download and install extensions
-Write-Styled "Installing Extensions..." -Color $Theme.Primary -Prefix "Step 3/6"
-$extensionsJson = "$env:TEMP\extensions.json"
+# Step 3: Install extensions
+Write-Host "$($PSStyle.Foreground.DarkGray)══════════════════════════════════════$($PSStyle.Reset)"
+Write-Log "Installing extensions..." -Color $Theme.Primary -Prefix "Step 3/7"
 try {
-    Invoke-WebRequest -Uri "$repoUrl/extensions.json" -OutFile $extensionsJson -ErrorAction SilentlyContinue
-    $extensions = (Get-Content $extensionsJson | ConvertFrom-Json).extensions
-    $extensions | ForEach-Object {
-        cursor --install-extension $_ --force
-        Write-Styled "Installed $_" -Color $Theme.Success
+    $extContent = Get-Content-Smart "extensions.json"
+    ($extContent | ConvertFrom-Json).extensions | ForEach-Object {
+        cursor --install-extension $_ --force | Out-Null
+        Write-Log "Installed $_" -Color $Theme.Success
     }
-} catch {
-    Write-Styled $_.ToString() -Color $Theme.Error -Prefix "Error"
-} finally {
-    Remove-Item $extensionsJson -ErrorAction SilentlyContinue
+} catch { Write-Log "Extension installation failed: $_" -Color $Theme.Warning }
+
+# Step 4: Install VSIX extensions
+Write-Host "$($PSStyle.Foreground.DarkGray)══════════════════════════════════════$($PSStyle.Reset)"
+Write-Log "Installing VSIX extensions..." -Color $Theme.Primary -Prefix "Step 4/7"
+$vsixPath = Join-Path $Config.ScriptRoot "vsix"
+if (Test-Path $vsixPath) {
+    Get-ChildItem "$vsixPath\*.vsix" | ForEach-Object {
+        cursor --install-extension $_.FullName --force | Out-Null
+        Write-Log "Installed $($_.Name)" -Color $Theme.Success
+    }
+} else { Write-Log "No local VSIX found, skipping" -Color $Theme.Warning }
+
+# Step 5: Context menu integration
+Write-Host "$($PSStyle.Foreground.DarkGray)══════════════════════════════════════$($PSStyle.Reset)"
+Write-Log "Adding context menu..." -Color $Theme.Primary -Prefix "Step 5/7"
+@(
+    @('HKCR:\*\shell\Cursor', '', 'Edit with Cursor'),
+    @('HKCR:\*\shell\Cursor', 'Icon', $Config.CursorExePath),
+    @('HKCR:\*\shell\Cursor\command', '', "`"$($Config.CursorExePath)`" `"%1`""),
+    @('HKCR:\Directory\shell\Cursor', '', 'Edit with Cursor'),
+    @('HKCR:\Directory\shell\Cursor', 'Icon', $Config.CursorExePath),
+    @('HKCR:\Directory\shell\Cursor\command', '', "`"$($Config.CursorExePath)`" `"%V`"")
+) | ForEach-Object {
+    $path = $_ -replace 'HKCR:', 'HKEY_CLASSES_ROOT'
+    REG ADD $path[0] /v $path[1] /t REG_EXPAND_SZ /d $path[2] /f | Out-Null
 }
-$border
+Write-Log "Context menu added" -Color $Theme.Success
 
-# Add Cursor to ContextMenu
-Write-Styled "Adding Cursor to ContextMenu..." -Color $Theme.Primary -Prefix "Step 4/6"
-$PATH = "$env:PROGRAMFILES\cursor\Cursor.exe"
-Write-Styled "Adding for all file types" -Color $Theme.Info
-REG ADD "HKEY_CLASSES_ROOT\*\shell\Cursor"         /ve       /t REG_EXPAND_SZ /d "Edit with Cursor"   /f
-REG ADD "HKEY_CLASSES_ROOT\*\shell\Cursor"         /v "Icon" /t REG_EXPAND_SZ /d "$PATH"            /f
-REG ADD "HKEY_CLASSES_ROOT\*\shell\Cursor\command" /ve       /t REG_EXPAND_SZ /d """$PATH"" ""%1""" /f
-Write-Styled "Adding for directories" -Color $Theme.Info
-REG ADD "HKEY_CLASSES_ROOT\Directory\shell\Cursor"         /ve       /t REG_EXPAND_SZ /d "Edit with Cursor"   /f
-REG ADD "HKEY_CLASSES_ROOT\Directory\shell\Cursor"         /v "Icon" /t REG_EXPAND_SZ /d "$PATH"            /f
-REG ADD "HKEY_CLASSES_ROOT\Directory\shell\Cursor\command" /ve       /t REG_EXPAND_SZ /d """$PATH"" ""%V""" /f
-Write-Styled "Cursor ContextMenu Entries Added" -Color $Theme.Success
-$border
+# Step 6: Install theme
+Write-Host "$($PSStyle.Foreground.DarkGray)══════════════════════════════════════$($PSStyle.Reset)"
+Write-Log "Installing o9 theme..." -Color $Theme.Primary -Prefix "Step 6/7"
+$themeZip = "$env:TEMP\o9-theme.zip"
+$themeDest = "$env:ProgramFiles\Cursor\resources\app\extensions"
+$localTheme = Join-Path $Config.ScriptRoot "o9-theme\o9-theme.zip"
 
-
-# Install o9 Theme
-Write-Styled "Installing o9 Theme..." -Color $Theme.Primary -Prefix "Step 5/6"
-Invoke-WebRequest "$repoUrl/archive/o9-theme.zip" -OutFile "$env:TEMP\o9-theme.zip" -ErrorAction SilentlyContinue
-Expand-Archive "$env:TEMP\o9-theme.zip" -DestinationPath "$env:PROGRAMFILES\cursor\resources\app\extensions" -Force
-Remove-Item "$env:TEMP\o9-theme.zip" -ErrorAction SilentlyContinue
-Write-Styled "o9 Theme Installed" -Color $Theme.Success
-$border
+if (Test-Path $localTheme) {
+    Expand-Archive $localTheme -DestinationPath $themeDest -Force
+} else {
+    Invoke-WebRequest "$($Config.RepoUrl)/o9-theme/o9-theme.zip" -OutFile $themeZip -UseBasicParsing
+    Expand-Archive $themeZip -DestinationPath $themeDest -Force
+    Remove-Item $themeZip -Force
+}
+Write-Log "Theme installed" -Color $Theme.Success
 
 
-# Function to install Fonts
-function Install-Fonts {
-    param (
-        [string]$FontName = "fonts",
-        [string]$FontDisplayName = "JetBrains Mono",
-        [string]$Version = "1"
-    )
-
-    try {
-        [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")
-        $fontFamilies = (New-Object System.Drawing.Text.InstalledFontCollection).Families.Name
-        if ($fontFamilies -notcontains "${FontDisplayName}") {
-            $fontZipUrl = "https://github.com/o9-9/cursor-setup/releases/download/${Version}/${FontName}.zip"
-            $zipFilePath = "$env:TEMP\${FontName}.zip"
-            $extractPath = "$env:TEMP\${FontName}"
-
-            $webClient = New-Object System.Net.WebClient
-            $webClient.DownloadFileAsync((New-Object System.Uri($fontZipUrl)), $zipFilePath)
-
-            while ($webClient.IsBusy) {
-                Start-Sleep -Seconds 2
-            }
-
-            Expand-Archive -Path $zipFilePath -DestinationPath $extractPath -Force
-            $destination = (New-Object -ComObject Shell.Application).Namespace(0x14)
-            Get-ChildItem -Path $extractPath -Recurse -Filter "*.ttf" | ForEach-Object {
-                If (-not(Test-Path "C:\Windows\Fonts\$($_.Name)")) {
-                    $destination.CopyHere($_.FullName, 0x10)
-                }
-            }
-
-            Remove-Item -Path $extractPath -Recurse -Force
-            Remove-Item -Path $zipFilePath -Force
+# Step 7: Install fonts
+Write-Host "$($PSStyle.Foreground.DarkGray)══════════════════════════════════════$($PSStyle.Reset)"
+Write-Log "Installing fonts..." -Color $Theme.Primary -Prefix "Step 7/7"
+try {
+    [void][System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")
+    $installed = (New-Object System.Drawing.Text.InstalledFontCollection).Families.Name
+    
+    if ($installed -notcontains "JetBrains Mono") {
+        $fontZip = "$env:TEMP\fonts.zip"
+        $fontPath = "$env:TEMP\fonts"
+        $localFonts = Join-Path $Config.ScriptRoot "fonts\fonts.zip"
+        
+        if (Test-Path $localFonts) {
+            Expand-Archive $localFonts -DestinationPath $fontPath -Force
         } else {
-            Write-Host "Font ${FontDisplayName} already installed"
+            Invoke-WebRequest "$($Config.RepoUrl)/fonts/fonts.zip" -OutFile $fontZip -UseBasicParsing
+            Expand-Archive $fontZip -DestinationPath $fontPath -Force
+            Remove-Item $fontZip -Force
         }
+        
+        $shell = New-Object -ComObject Shell.Application
+        $fontsFolder = $shell.Namespace(0x14)
+        Get-ChildItem "$fontPath\*.ttf" | ForEach-Object {
+            if (!(Test-Path "C:\Windows\Fonts\$($_.Name)")) {
+                $fontsFolder.CopyHere($_.FullName, 0x10)
+            }
+        }
+        Remove-Item $fontPath -Recurse -Force
+        Write-Log "Fonts installed" -Color $Theme.Success
+    } else {
+        Write-Log "Fonts already installed" -Color $Theme.Success
     }
-    catch {
-        Write-Error "Failed to download or install ${FontDisplayName} font. Error: $_"
-    }
-}
-# Function to test internet connectivity
-function Test-InternetConnection {
-    try {
-        Test-Connection -ComputerName www.google.com -Count 1 -ErrorAction Stop | Out-Null
-        return $true
-    }
-    catch {
-        Write-Warning "Internet connection is required but not available. Please check your connection."
-        return $false
-    }
-}
-# Check for internet connectivity before proceeding
-if (-not (Test-InternetConnection)) {
-    break
-}
-# Font Install
-Write-Styled "Installing Fonts..." -Color $Theme.Primary -Prefix "Step 6/6"
-Install-Fonts -FontName "fonts" -FontDisplayName "JetBrains Mono"
+} catch { Write-Log "Font installation failed: $_" -Color $Theme.Warning }
 
-Write-Styled "Fonts Installed" -Color $Theme.Success
-$border
-
-Write-Styled "Cursor Configuration Complete" -Color $Theme.Success -Prefix "Complete"
-
-Write-Host "`nPress any key to exit..." -ForegroundColor $Theme.Info
+# Completion
+Write-Host "$($PSStyle.Foreground.DarkGray)══════════════════════════════════════$($PSStyle.Reset)"
+Write-Log "Setup complete!" -Color $Theme.Success -Prefix "Complete"
+Write-Host "`nPress any key to exit..." -ForegroundColor Cyan
 $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')

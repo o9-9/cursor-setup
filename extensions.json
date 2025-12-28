@@ -1,9 +1,14 @@
 {
   "extensions": [
+    "castrogusttavo.symbol",
+    "miguelsolorio.fluent-icons",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
-    "ms-vscode.powershell",
-    "castrogusttavo.symbols",
-    "miguelsolorio.fluent-icons"
+    "editorconfig.editorconfig",
+    "drinfinite.batch-rename",
+    "ritwickdey.liveserver",
+    "gregorbiswanger.json2ts",
+    "stylelint.vscode-stylelint",
+    "vendicated.vencord-companion"
   ]
 }
