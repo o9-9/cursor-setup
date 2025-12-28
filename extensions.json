@@ -1,18 +1,17 @@
 {
   "extensions": [
-    "GitHub.copilot",
-    "GitHub.copilot-chat",
+    "github.copilot",
+    "github.copilot-chat",
     "miguelsolorio.symbols",
     "miguelsolorio.fluent-icons",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "drinfinite.batch-rename",
+    "ritwickdey.liveserver",
     "ms-vscode.powershell",
-    "EditorConfig.EditorConfig",
-    "aaron-bond.better-comments",
-    "formulahendry.code-runner",
-    "formulahendry.auto-close-tag",
-    "formulahendry.auto-rename-tag",
-    "christian-kohler.path-intellisense",
-    "Zignd.html-css-class-completion"
+    "gregorbiswanger.json2ts",
+    "stylelint.vscode-stylelint",
+    "vendicated.vencord-companion"
   ]
 }

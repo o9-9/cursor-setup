@@ -39,7 +39,7 @@ function Write-Styled {
         $Theme.Warning { "[!]" }
         default        { "[*]" }
     }
-
+    
     $output = if ($Prefix) { "$symbol $Prefix :: $Message" } else { "$symbol $Message" }
     if ($NoNewline) {
         Write-Host $output -ForegroundColor $Color -NoNewline
@@ -88,25 +88,15 @@ Write-Styled "VS Code Setup Assistant" -Color $Theme.Primary -Prefix "Setup"
 
 
 # Installs the latest VS Code
-Write-Styled "Installing VS Code..." -Color $Theme.Primary -Prefix "Step 1/7"
+Write-Styled "Installing VS Code..." -Color $Theme.Primary -Prefix "Step 1/6"
 winget install --id Microsoft.VisualStudioCode --scope machine --accept-package-agreements --accept-source-agreements
 Write-Styled "VS Code Installed" -Color $Theme.Success -Prefix "Success"
 
-# Define paths
-$ScriptRoot = if ($PSScriptRoot) { $PSScriptRoot } else { Get-Location }
+# Define GitHub repository and VS Code paths
 $repoUrl = "https://raw.githubusercontent.com/o9-9/vscode-setup/main"
 $VSCodeUserPath = "$env:APPDATA\Code\User"
-$VSCodeInstallPath = "$env:LOCALAPPDATA\Programs\Microsoft VS Code"
-$VSCodeExePath = if (Test-Path "$VSCodeInstallPath\Code.exe") { 
-    "$VSCodeInstallPath\Code.exe" 
-} elseif (Test-Path "$env:PROGRAMFILES\Microsoft VS Code\Code.exe") {
-    "$env:PROGRAMFILES\Microsoft VS Code\Code.exe"
-} else {
-    "code"
-}
-
 $border
-Write-Styled "Configuring VS Code Settings..." -Color $Theme.Primary -Prefix "Step 2/7"
+Write-Styled "Configuring VS Code Settings..." -Color $Theme.Primary -Prefix "Step 2/6"
 # Ensure the VS Code settings directory exists
 if (!(Test-Path $VSCodeUserPath)) {
     New-Item -ItemType Directory -Path $VSCodeUserPath -Force
@@ -114,24 +104,12 @@ if (!(Test-Path $VSCodeUserPath)) {
 }
 
 # Download and copy settings.json
-$localSettings = Join-Path $ScriptRoot "settings.json"
-if (Test-Path $localSettings) {
-    Copy-Item -Path $localSettings -Destination "$VSCodeUserPath\settings.json" -Force
-    Write-Styled "Copied local settings.json to VS Code" -Color $Theme.Success
-} else {
-    Invoke-WebRequest -Uri "$repoUrl/settings.json" -OutFile "$VSCodeUserPath\settings.json" -ErrorAction Stop
-    Write-Styled "Downloaded and copied settings.json to VS Code" -Color $Theme.Success
-}
+Invoke-WebRequest -Uri "$repoUrl/settings.json" -OutFile "$VSCodeUserPath\settings.json"
+Write-Styled "Copied settings.json to VS Code" -Color $Theme.Success
 
 # Download and copy keybindings.json
-$localKeybindings = Join-Path $ScriptRoot "keybindings.json"
-if (Test-Path $localKeybindings) {
-    Copy-Item -Path $localKeybindings -Destination "$VSCodeUserPath\keybindings.json" -Force
-    Write-Styled "Copied local keybindings.json to VS Code" -Color $Theme.Success
-} else {
-    Invoke-WebRequest -Uri "$repoUrl/keybindings.json" -OutFile "$VSCodeUserPath\keybindings.json" -ErrorAction Stop
-    Write-Styled "Downloaded and copied keybindings.json to VS Code" -Color $Theme.Success
-}
+Invoke-WebRequest -Uri "$repoUrl/keybindings.json" -OutFile "$VSCodeUserPath\keybindings.json"
+Write-Styled "Copied keybindings.json to VS Code" -Color $Theme.Success
 
 # Refresh environment variables
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
@@ -140,63 +118,25 @@ $border
 
 
 # Download and install extensions
-Write-Styled "Installing Extensions..." -Color $Theme.Primary -Prefix "Step 3/7"
-$localExtensionsJson = Join-Path $ScriptRoot "extensions.json"
+Write-Styled "Installing Extensions..." -Color $Theme.Primary -Prefix "Step 3/6"
 $extensionsJson = "$env:TEMP\extensions.json"
-
 try {
-    if (Test-Path $localExtensionsJson) {
-        $extensions = (Get-Content $localExtensionsJson | ConvertFrom-Json).extensions
-        Write-Styled "Loading extensions from local file" -Color $Theme.Info
-    } else {
-        Invoke-WebRequest -Uri "$repoUrl/extensions.json" -OutFile $extensionsJson -ErrorAction Stop
-        $extensions = (Get-Content $extensionsJson | ConvertFrom-Json).extensions
-        Write-Styled "Loading extensions from remote repository" -Color $Theme.Info
-    }
-    
+    Invoke-WebRequest -Uri "$repoUrl/extensions.json" -OutFile $extensionsJson -ErrorAction SilentlyContinue
+    $extensions = (Get-Content $extensionsJson | ConvertFrom-Json).extensions
     $extensions | ForEach-Object {
         code --install-extension $_ --force
         Write-Styled "Installed $_" -Color $Theme.Success
     }
 } catch {
-    Write-Styled $_.Exception.Message -Color $Theme.Error -Prefix "Error"
+    Write-Styled $_.ToString() -Color $Theme.Error -Prefix "Error"
 } finally {
-    if (Test-Path $extensionsJson) {
-        Remove-Item $extensionsJson -ErrorAction SilentlyContinue
-    }
-}
-$border
-
-# Install VSIX extensions from local folder
-Write-Styled "Installing VSIX Extensions..." -Color $Theme.Primary -Prefix "Step 4/7"
-$vsixFolder = Join-Path $ScriptRoot "vsix"
-if (Test-Path $vsixFolder) {
-    $vsixFiles = Get-ChildItem -Path $vsixFolder -Filter "*.vsix" -ErrorAction SilentlyContinue
-    if ($vsixFiles.Count -gt 0) {
-        Write-Styled "Found $($vsixFiles.Count) VSIX file(s)" -Color $Theme.Info
-        foreach ($vsixFile in $vsixFiles) {
-            try {
-                code --install-extension $vsixFile.FullName --force
-                Write-Styled "Installed $($vsixFile.Name)" -Color $Theme.Success
-            } catch {
-                Write-Styled "Failed to install $($vsixFile.Name): $($_.Exception.Message)" -Color $Theme.Warning
-            }
-        }
-    } else {
-        Write-Styled "No VSIX files found in vsix folder" -Color $Theme.Info
-    }
-} else {
-    Write-Styled "VSIX folder not found, skipping" -Color $Theme.Info
+    Remove-Item $extensionsJson -ErrorAction SilentlyContinue
 }
 $border
 
 # Add VS Code to ContextMenu
-Write-Styled "Adding VS Code to ContextMenu..." -Color $Theme.Primary -Prefix "Step 5/7"
-$PATH = if (Test-Path "$VSCodeInstallPath\Code.exe") { 
-    "$VSCodeInstallPath\Code.exe" 
-} else { 
-    "$env:PROGRAMFILES\Microsoft VS Code\Code.exe" 
-}
+Write-Styled "Adding VS Code to ContextMenu..." -Color $Theme.Primary -Prefix "Step 4/6"
+$PATH = "$env:PROGRAMFILES\Microsoft VS Code\Code.exe"
 Write-Styled "Adding for all file types" -Color $Theme.Info
 REG ADD "HKEY_CLASSES_ROOT\*\shell\VSCode"         /ve       /t REG_EXPAND_SZ /d "Edit with VSCode"   /f
 REG ADD "HKEY_CLASSES_ROOT\*\shell\VSCode"         /v "Icon" /t REG_EXPAND_SZ /d "$PATH"            /f
@@ -210,33 +150,11 @@ $border
 
 
 # Install o9 Theme
-Write-Styled "Installing o9 Theme..." -Color $Theme.Primary -Prefix "Step 6/7"
-$localThemeZip = Join-Path $ScriptRoot "o9-theme\o9-theme.zip"
-$tempThemeZip = "$env:TEMP\o9-theme.zip"
-$extensionsPath = if (Test-Path "$VSCodeInstallPath\resources\app\extensions") {
-    "$VSCodeInstallPath\resources\app\extensions"
-} else {
-    "$env:PROGRAMFILES\Microsoft VS Code\resources\app\extensions"
-}
-
-try {
-    if (Test-Path $localThemeZip) {
-        Copy-Item -Path $localThemeZip -Destination $tempThemeZip -Force
-        Write-Styled "Using local o9 theme" -Color $Theme.Info
-    } else {
-        Invoke-WebRequest "$repoUrl/o9-theme/o9-theme.zip" -OutFile $tempThemeZip -ErrorAction Stop
-        Write-Styled "Downloaded o9 theme" -Color $Theme.Info
-    }
-    
-    Expand-Archive $tempThemeZip -DestinationPath $extensionsPath -Force
-    Write-Styled "o9 Theme Installed" -Color $Theme.Success
-} catch {
-    Write-Styled "Failed to install o9 theme: $($_.Exception.Message)" -Color $Theme.Warning
-} finally {
-    if (Test-Path $tempThemeZip) {
-        Remove-Item $tempThemeZip -ErrorAction SilentlyContinue
-    }
-}
+Write-Styled "Installing o9 Theme..." -Color $Theme.Primary -Prefix "Step 5/6"
+Invoke-WebRequest "$repoUrl/o9-theme/o9-theme.zip" -OutFile "$env:TEMP\o9-theme.zip" -ErrorAction SilentlyContinue
+Expand-Archive "$env:TEMP\o9-theme.zip" -DestinationPath "$env:PROGRAMFILES\Microsoft VS Code\resources\app\extensions" -Force
+Remove-Item "$env:TEMP\o9-theme.zip" -ErrorAction SilentlyContinue
+Write-Styled "o9 Theme Installed" -Color $Theme.Success
 $border
 
 
@@ -244,31 +162,22 @@ $border
 function Install-Fonts {
     param (
         [string]$FontName = "fonts",
-        [string]$FontDisplayName = "JetBrains Mono",
-        [string]$ScriptRoot
+        [string]$FontDisplayName = "JetBrains Mono"
     )
 
     try {
         [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")
         $fontFamilies = (New-Object System.Drawing.Text.InstalledFontCollection).Families.Name
         if ($fontFamilies -notcontains "${FontDisplayName}") {
-            $localFontZip = Join-Path $ScriptRoot "fonts\fonts.zip"
+            $fontZipUrl = "$repoUrl/fonts/fonts.zip"
             $zipFilePath = "$env:TEMP\fonts.zip"
             $extractPath = "$env:TEMP\fonts"
 
-            # Check for local fonts first
-            if (Test-Path $localFontZip) {
-                Copy-Item -Path $localFontZip -Destination $zipFilePath -Force
-                Write-Styled "Using local fonts" -Color $Theme.Info
-            } else {
-                $fontZipUrl = "$repoUrl/fonts/fonts.zip"
-                $webClient = New-Object System.Net.WebClient
-                $webClient.DownloadFileAsync((New-Object System.Uri($fontZipUrl)), $zipFilePath)
+            $webClient = New-Object System.Net.WebClient
+            $webClient.DownloadFileAsync((New-Object System.Uri($fontZipUrl)), $zipFilePath)
 
-                while ($webClient.IsBusy) {
-                    Start-Sleep -Seconds 2
-                }
-                Write-Styled "Downloaded fonts" -Color $Theme.Info
+            while ($webClient.IsBusy) {
+                Start-Sleep -Seconds 2
             }
 
             Expand-Archive -Path $zipFilePath -DestinationPath $extractPath -Force
@@ -282,11 +191,11 @@ function Install-Fonts {
             Remove-Item -Path $extractPath -Recurse -Force
             Remove-Item -Path $zipFilePath -Force
         } else {
-            Write-Styled "Font ${FontDisplayName} already installed" -Color $Theme.Info
+            Write-Host "Font ${FontDisplayName} already installed"
         }
     }
     catch {
-        Write-Styled "Failed to download or install ${FontDisplayName} font: $($_.Exception.Message)" -Color $Theme.Error -Prefix "Error"
+        Write-Error "Failed to download or install ${FontDisplayName} font. Error: $_"
     }
 }
 # Function to test internet connectivity
@@ -305,8 +214,8 @@ if (-not (Test-InternetConnection)) {
     break
 }
 # Font Install
-Write-Styled "Installing Fonts..." -Color $Theme.Primary -Prefix "Step 7/7"
-Install-Fonts -FontName "fonts" -FontDisplayName "JetBrains Mono" -ScriptRoot $ScriptRoot
+Write-Styled "Installing Fonts..." -Color $Theme.Primary -Prefix "Step 6/6"
+Install-Fonts -FontName "fonts" -FontDisplayName "JetBrains Mono"
 
 Write-Styled "Fonts Installed" -Color $Theme.Success
 $border

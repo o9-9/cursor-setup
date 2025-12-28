@@ -69,25 +69,27 @@
   "problems.decorations.enabled": false,
   //
   //  *  Theme & Icon
-  "workbench.colorTheme": "o9",
+  "workbench.colorTheme": "o9 Cursor Dark",
   "workbench.iconTheme": "symbols",
   "window.systemColorTheme": "dark",
-  "workbench.preferredDarkColorTheme": "o9",
-  "workbench.preferredLightColorTheme": "o9",
+  "workbench.preferredDarkColorTheme": "o9 Cursor Dark",
+  "workbench.preferredLightColorTheme": "o9 Cursor Dark",
   "workbench.productIconTheme": "fluent-icons",
-  "workbench.preferredHighContrastColorTheme": "o9",
-  "workbench.preferredHighContrastLightColorTheme": "o9",
+  "workbench.preferredHighContrastColorTheme": "o9 Cursor Dark",
+  "workbench.preferredHighContrastLightColorTheme": "o9 Cursor Dark",
   //
   //  *  Font
-  "editor.fontSize": 16,
+  "editor.fontSize": 14,
   "scm.inputFontSize": 12,
   "editor.lineHeight": 1.8,
   "debug.console.fontSize": 14,
   "debug.console.lineHeight": 35,
   "terminal.integrated.fontSize": 16,
   "editor.fontLigatures": "'ss01', 'cv03', 'zero'",
-  "editor.fontFamily": "'JetBrains Mono', 'JetBrainsMono Nerd Font Mono'",
-  "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font Mono', 'JetBrains Mono'",
+  "editor.fontFamily": "'JetBrains Mono', 'JetBrainsMono Nerd Font Mono', Consolas, 'Courier New', monospace",
+  "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', Consolas, 'Courier New', monospace",
+  "scm.inputFontFamily": "'JetBrains Mono', 'JetBrainsMono Nerd Font Mono', Consolas, 'Courier New', monospace",
+  "editor.inlineSuggest.fontFamily": "Consolas, 'Courier New', monospace",
   //
   //  *  General
   "window.title": " ",
@@ -117,7 +119,6 @@
   "workbench.navigationControl.enabled": false,
   "workbench.editor.tabActionLocation": "left",
   "workbench.localHistory.maxFileEntries": 1000,
-  "editor.inlineSuggest.fontFamily": "consolas",
   "editor.unicodeHighlight.nonBasicASCII": false,
   "workbench.editor.highlightModifiedTabs": true,
   "workbench.secondarySideBar.showLabels": false,
@@ -134,6 +135,8 @@
   "chat.editor.wordWrap": "on",
   "editor.minimap.enabled": true,
   "editor.smoothScrolling": true,
+  "editor.fastScrollSensitivity": 7,
+  "editor.mouseWheelScrollSensitivity": 7,
   "editor.minimap.maxColumn": 60,
   "editor.multiCursorLimit": 50000,
   "editor.cursorBlinking": "solid",
@@ -284,10 +287,7 @@
   "github.copilot.chat.pullRequestDescriptionGeneration.instructions": [],
   "github.copilot.enable": {
     "*": true,
-    "plaintext": false,
-    "markdown": false,
-    "scminput": false,
-    "jsonc": false
+    "plaintext": false
   },
   //
   //  *  Suggestions
@@ -346,11 +346,7 @@
     "chmod": true,
     "chown": true,
     "/^Remove-Item\\b/i": true,
-    "ps1": true,
-    "(Get-Content 'c:\\Users\\o9\\Downloads\\352PbW1S') | ForEach-Object { '@' + $_ } | Set-Content 'c:\\Users\\o9\\Downloads\\352PbW1S'": {
-      "approve": true,
-      "matchCommandLine": true
-    }
+    "ps1": true
   },
   //
   //  *  Search
@@ -431,128 +427,40 @@
   //"workbench.settings.editor": "json",
   //
   //  *  Formatter
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.formatOnType": false,
   "editor.formatOnPaste": false,
   "editor.formatOnSaveMode": "file",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit",
-    "source.fixAll.stylelint": "explicit",
-    "source.fixAll.tslint": "explicit"
-  },
-  "[json]": {
-    "editor.formatOnSave": false,
-    "editor.formatOnType": false,
-    "editor.formatOnPaste": false,
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[jsonc]": {
-    "editor.formatOnSave": false,
-    "editor.formatOnType": false,
-    "editor.formatOnPaste": false,
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[markdown]": {
-    "editor.defaultFormatter": "vscode.markdown-language-features"
-  },
-  "[html]": {
-    "editor.defaultFormatter": "vscode.html-language-features"
-  },
-  "[css]": {
-    "editor.defaultFormatter": "vscode.css-language-features"
-  },
-  "[scss]": {
-    "editor.defaultFormatter": "vscode.css-language-features"
-  },
-  "[less]": {
-    "editor.defaultFormatter": "vscode.css-language-features"
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  },
-  "[javascriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "source.fixAll.eslint": "explicit"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[yaml]": {
-    //"editor.defaultFormatter": "redhat.vscode-yaml"
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[xml]": {
-    //"editor.defaultFormatter": "redhat.vscode-xml"
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[java]": {
-    "editor.tabSize": 4,
-    //"editor.defaultFormatter": "redhat.java"
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[rust]": {
-    "editor.tabSize": 4,
-    //"editor.defaultFormatter": "rust-lang.rust-analyzer"
-  },
-  "[php]": {
-    "editor.tabSize": 4,
-    //"editor.defaultFormatter": "vscode.php-language-features"
-  },
-  "[properties]": {
-    //"editor.defaultFormatter": "foxundermoon.shell-format"
-  },
-  "[shellscript]": {
-    //"editor.defaultFormatter": "foxundermoon.shell-format"
-  },
-  "[powershell]": {
-    "editor.tabSize": 4
-    //"editor.defaultFormatter": "ms-vscode.powershell"
-  },
-  "[python]": {
-    "editor.tabSize": 4
-    //"editor.defaultFormatter": "ms-python.python"
-  },
-  "[c]": {
-    "editor.tabSize": 4
-    //"editor.defaultFormatter": "ms-vscode.cpptools"
-  },
-  "[cpp]": {
-    "editor.tabSize": 4
-    //"editor.defaultFormatter": "ms-vscode.cpptools"
-  },
-  "[csharp]": {
-    "editor.tabSize": 4
-    //"editor.defaultFormatter": "ms-dotnettools.csharp"
-  },
-  "[go]": {
-    "editor.tabSize": 4
-    //"editor.defaultFormatter": "golang.go"
-  },
-  //  -  Blade
-  "[blade]": {},
-  //  -  Dart
-  "[dart]": {
-    "editor.formatOnSave": true,
-    "editor.formatOnType": true,
-    "editor.rulers": [],
-    "editor.selectionHighlight": false,
-    "editor.suggestSelection": "first",
-    "editor.tabCompletion": "on",
-    "editor.wordBasedSuggestions": "allDocuments"
-  },
-  //  -  HTML
-  "html.format.indentInnerHtml": true,
-  "html.format.wrapLineLength": 0,
+  "cSpell.words": ["Equibop", "Vesktop"],
   //  -  CSS
-  "editor.colorDecorators": true,
-  //  -  JAVASCRIPT
-  "javascript.suggest.paths": false,
-  "javascript.suggest.autoImports": true,
-  "javascript.suggest.completeFunctionCalls": true,
-  //  -  TYPESCRIPT
-  "typescript.suggest.paths": false,
-  "typescript.suggest.autoImports": true,
-  "typescript.updateImportsOnFileMove.enabled": "never",
+  "css.format.spaceAroundSelectorSeparator": true,
+  //  -  JAVASCRIPT - TYPESCRIPT
+  "javascript.format.semicolons": "insert",
+  "typescript.format.semicolons": "insert",
+  "typescript.preferences.quoteStyle": "double",
+  "javascript.preferences.quoteStyle": "double",
   //  -  Emmet
   "emmet.useInlineCompletions": true,
   "emmet.triggerExpansionOnTab": true,
@@ -615,6 +523,15 @@
       "mode": "auto"
     }
   ],
+  //  -  GitLens
+  "gitlens.remotes": [
+    {
+      "domain": "codeberg.org",
+      "type": "Gitea"
+    }
+  ],
+  //  -  Equicord
+  "equicord-companion.showSidebar": true,
   //  -  PowerShell
   "powershell.startAutomatically": false,
   "powershell.codeFolding.enable": false,
@@ -646,30 +563,20 @@
     "blade": "html"
   },
   "tailwindCSS.experimental.classRegex": [
-    [
-      "tv\\(([^)]*)\\)",
-      "cva\\(([^)]*)\\)",
-      "[\"'`]([^\"'`]*).*?[\"'`]"
-    ],
+    ["tv\\(([^)]*)\\)", "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     "class:\\s*?[\"'`]([^\"'`]*).*?,",
     "tw\\('([^']*)'\\)"
   ],
   //  -  CSS Variables
-  "cssVariables.lookupFiles": [
-    "**/*.css",
-    "**/*.scss",
-    "**/*.sass"
-  ],
+  "cssVariables.lookupFiles": ["**/*.css", "**/*.scss", "**/*.sass"],
   //  -  ADVANCEDNEWFILE
-  "advancedNewFile.convenienceOptions": [
-    "last",
-    "current",
-    "root"
-  ],
+  "advancedNewFile.convenienceOptions": ["last", "current", "root"],
   "advancedNewFile.exclude": {
     "node_modules": true,
     "dist": true
   },
   "remoteHub.commitDirectlyWarning": "off",
-  "editor.inlineSuggest.edits.showCollapsed": true
+  "editor.inlineSuggest.edits.showCollapsed": true,
+  "github.copilot.chat.localeOverride": "en",
+  "github.copilot.advanced": {}
 }
